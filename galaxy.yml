@@ -1,0 +1,29 @@
+namespace: timvy
+
+name: semaphore
+
+version: 0.0.1
+
+readme: README.md
+
+authors:
+  - timvy
+
+description: A Collection to install and manage SemaphoreUI and additional Software
+
+license_file: LICENSE
+
+tags: []
+
+
+dependencies: {}
+
+repository: https://github.com/timvy/ansible-collection-semaphore
+
+documentation: https://github.com/timvy/ansible-collection-semaphore/blob/main/README.md
+
+homepage: https://github.com/timvy/ansible-collection-semaphore
+
+issues: https://github.com/timvy/ansible-collection-semaphore/issues
+
+build_ignore: []
