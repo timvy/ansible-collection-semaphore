@@ -9,3 +9,8 @@ semaphore_galaxy_requirements:
 semaphore_pip_requirements:
   - ansible
   - requests
+
+semaphore_hash: "{{ lookup('community.general.bitwarden', 'lxc-semaphore_hash', field='password')|join() }}"
+semaphore_encr: "{{ lookup('community.general.bitwarden', 'lxc-semaphore_encryption', field='password')|join() }}"
+semaphore_key: "{{ lookup('community.general.bitwarden', 'lxc-semaphore_key', field='password')|join() }}"
+semaphore_admin: "{{ lookup('community.general.bitwarden', 'lxc-semaphore_admin', field='password')|join() }}"

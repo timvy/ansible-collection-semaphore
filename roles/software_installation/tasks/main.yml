@@ -58,13 +58,6 @@
     deb: "/tmp/semaphore_{{ semaphore_release }}_linux_amd64.deb"
   become: true
 
-- name: Read secrets from bitwarden
-  ansible.builtin.set_fact:
-    semaphore_hash: "{{ lookup('community.general.bitwarden', 'lxc-semaphore_hash', field='password')|join() }}"
-    semaphore_encr: "{{ lookup('community.general.bitwarden', 'lxc-semaphore_encryption', field='password')|join() }}"
-    semaphore_key: "{{ lookup('community.general.bitwarden', 'lxc-semaphore_key', field='password')|join() }}"
-    semaphore_admin: "{{ lookup('community.general.bitwarden', 'lxc-semaphore_admin', field='password')|join() }}"
-
 - name: Configure semaphore
   ansible.builtin.template:
     src: templates/semaphore_config.json.j2
