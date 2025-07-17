@@ -1,0 +1,107 @@
+---
+- name: Install required packages
+  ansible.builtin.apt:
+    name: "{{ semaphore_package_requirements }}"
+    state: latest
+
+- name: create user
+  ansible.builtin.user:
+    name: "{{ semaphore_user }}"
+    comment: Semaphore user
+    home: "{{ semaphore_user_home }}"
+    create_home: true
+
+- name: Create virtual environment and install requirements into it
+  ansible.builtin.pip:
+    name: "{{ semaphore_pip_requirements }}"
+    virtualenv: '{{ semaphore_user_home }}/venv'
+    state: latest
+  become: true
+  become_user: semaphore
+
+- name: Create ansible galaxy requirements file
+  ansible.builtin.copy:
+    content: |
+      collections:
+        - community.general
+    dest: "{{ semaphore_user_home }}/requirements.yml"
+    mode: 0600
+  become: true
+  become_user: semaphore
+
+- name: Install collection using ansible-galaxy
+  shell: |
+    source {{ semaphore_user_home }}/venv/bin/activate
+    ansible-galaxy collection install --upgrade -r /config/semaphore/requirements.yml
+  args:
+    executable: /bin/bash
+  become: true
+  become_user: semaphore
+
+- name: Get latest release version
+  ansible.builtin.uri:
+    url: "https://api.github.com/repos/semaphoreui/semaphore/releases/latest"
+    return_content: true
+  register: semaphore_releases
+
+- name: Parse semaphore release
+  ansible.builtin.set_fact:
+    semaphore_release: "{{ semaphore_releases.json.tag_name | replace('v', '')}}"
+
+- name: Download semaphore
+  ansible.builtin.get_url:
+    url: "https://github.com/semaphoreui/semaphore/releases/download/v{{semaphore_release}}/semaphore_{{semaphore_release}}_linux_amd64.deb"
+    dest: "/tmp/semaphore_{{ semaphore_release }}_linux_amd64.deb"
+
+- name: Install semaphore
+  ansible.builtin.apt:
+    deb: "/tmp/semaphore_{{ semaphore_release }}_linux_amd64.deb"
+  become: true
+
+- name: Read secrets from bitwarden
+  ansible.builtin.set_fact:
+    semaphore_hash: "{{ lookup('community.general.bitwarden', 'lxc-semaphore_hash', field='password')|join() }}"
+    semaphore_encr: "{{ lookup('community.general.bitwarden', 'lxc-semaphore_encryption', field='password')|join() }}"
+    semaphore_key: "{{ lookup('community.general.bitwarden', 'lxc-semaphore_key', field='password')|join() }}"
+    semaphore_admin: "{{ lookup('community.general.bitwarden', 'lxc-semaphore_admin', field='password')|join() }}"
+
+- name: Configure semaphore
+  ansible.builtin.template:
+    src: templates/semaphore_config.json.j2
+    dest: "{{ semaphore_user_home }}/config.json"
+  become: true
+  become_user: semaphore
+  notify: Semaphore service restart
+
+- name: Check if semaphore is running
+  command: systemctl status semaphore
+  become: true
+  ignore_errors: true
+  changed_when: false
+  register: service_semaphore_status
+
+- name: Run semaphore configure
+  ansible.builtin.command:
+    cmd: "/usr/bin/semaphore users list --config /config/semaphore/config.json"
+  register: semaphore_users
+  become: true
+  become_user: semaphore
+  when: service_semaphore_status.rc != 0
+
+- name: Run semaphore basic setup
+  ansible.builtin.command:
+    cmd: "/usr/bin/semaphore user add --admin --login admin --password '{{ semaphore_admin }}' --name admin --email admin@localhost --config /config/semaphore/config.json"
+  become: true
+  become_user: semaphore
+  when: semaphore_users is defined and semaphore_users.stdout is defined and 'admin' not in semaphore_users.stdout
+  notify: Semaphore service restart
+
+- name: Create systemd service
+  ansible.builtin.template:
+    src: templates/semaphore_systemd.j2
+    dest: /etc/systemd/system/semaphore.service
+  notify: Semaphore service restart
+
+- name: Start Tailscale proxy
+  ansible.builtin.command:
+    cmd: "tailscale serve --bg 3000"

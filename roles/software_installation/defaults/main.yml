@@ -1,0 +1,11 @@
+---
+semaphore_package_requirements:
+  - python3-pip
+  - virtualenv
+semaphore_user: semaphore
+semaphore_user_home: /config/semaphore
+semaphore_galaxy_requirements:
+  - community.general
+semaphore_pip_requirements:
+  - ansible
+  - requests

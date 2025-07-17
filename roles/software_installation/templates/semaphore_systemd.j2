@@ -1,0 +1,20 @@
+[Unit]
+Description=Semaphore UI
+Documentation=https://docs.semaphoreui.com/
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User={{ semaphore_user }}
+Group={{ semaphore_user }}
+# to auto-upgrade ansible collections and roles at service startup
+ExecStartPre=/bin/bash -c 'source {{ semaphore_user_home }}/venv/bin/activate \
+                           && ansible-galaxy collection install --upgrade -r {{ semaphore_user_home }}/requirements.yml \
+                           && ansible-galaxy role install --force -r {{ semaphore_user_home }}/requirements.yml'
+ExecStart=/bin/bash -c 'source /config/semaphore/venv/bin/activate \
+                        && /usr/bin/semaphore server --config {{ semaphore_user_home }}/config.json'
+Restart=always
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target

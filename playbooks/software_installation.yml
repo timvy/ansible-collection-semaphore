@@ -1,0 +1,6 @@
+---
+- name: Install and configure SemaphoreUI
+  tags: semaphore
+  hosts: semaphore
+  roles:
+    - role: timvy.semaphore.software_installation
