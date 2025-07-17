@@ -1,3 +1,4 @@
 ---
 collections:
   - name: ebdruplab.semaphoreui
+  - name: community.general
