@@ -1,16 +1,16 @@
 ---
-- name: Add OpenTofu APT repository
-  apt_repository:
-    ansible.builtin.repo: 'deb [arch=amd64] https://packages.opentofu.org/ stable main'
-    state: present
-
 - name: Add OpenTofu GPG key
   ansible.builtin.apt_key:
-    url: 'https://packages.opentofu.org/opentofu/tofu/gpgkey'
+    url: https://packages.opentofu.org/opentofu/tofu/gpgkey
+    state: present
+
+- name: Add OpenTofu APT repository
+  ansible.builtin.apt_repository:
+    repo: deb https://packages.opentofu.org/opentofu/tofu/any/ any main
     state: present
 
 - name: Install OpenTofu
   ansible.builtin.apt:
-    name: opentofu
+    name: tofu
     state: latest
     update_cache: true
