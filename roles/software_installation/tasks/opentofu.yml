@@ -1,23 +1,19 @@
 ---
-- name: Install OpenTofu from official APT repository on Debian
-  hosts: semaphore
-  become: true
-  tasks:
-    - name: Add OpenTofu APT repository
-      apt_repository:
-        repo: 'deb [arch=amd64] https://packages.opentofu.org/ stable main'
-        state: present
+- name: Add OpenTofu APT repository
+  apt_repository:
+    ansible.builtin.repo: 'deb [arch=amd64] https://packages.opentofu.org/ stable main'
+    state: present
 
-    - name: Add OpenTofu GPG key
-      apt_key:
-        url: 'https://packages.opentofu.org/opentofu/tofu/gpgkey'
-        state: present
+- name: Add OpenTofu GPG key
+  ansible.builtin.apt_key:
+    url: 'https://packages.opentofu.org/opentofu/tofu/gpgkey'
+    state: present
 
-    - name: Update APT cache
-      apt:
-        update_cache: yes
+- name: Update APT cache
+  ansible.builtin.apt:
+    update_cache: yes
 
-    - name: Install OpenTofu
-      apt:
-        name: opentofu
-        state: latest
+- name: Install OpenTofu
+  ansible.builtin.apt:
+    name: opentofu
+    state: latest
