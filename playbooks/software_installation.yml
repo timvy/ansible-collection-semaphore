@@ -4,3 +4,9 @@
   hosts: semaphore
   roles:
     - role: timvy.semaphore.software_installation
+
+- name: Configure Proxmox host for ansible-pct user
+  tags: proxmox_configure
+  hosts: proxmox
+  roles:
+    - role: timvy.semaphore.proxmox_configure

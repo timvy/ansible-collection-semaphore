@@ -1,0 +1,9 @@
+---
+- name: Configre SemaphoreUI content
+  tags: semaphore
+  hosts: localhost
+
+  tasks:
+    - name: debug
+      ansible.builtin.debug:
+        msg: "{{ lookup('community.general.bitwarden', 'semaphore_homelab', field='sshKey').0.publicKey }}"
