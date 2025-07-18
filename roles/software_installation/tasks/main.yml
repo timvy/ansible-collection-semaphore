@@ -101,4 +101,7 @@
 
 - name: Install OpenTofu from official APT repository on Debian
   include_tasks: opentofu.yml
-  tags: opentofu
+  args:
+    apply:
+      tags: opentofu
+  tags: always
