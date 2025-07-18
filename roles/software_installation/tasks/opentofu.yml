@@ -9,11 +9,8 @@
     url: 'https://packages.opentofu.org/opentofu/tofu/gpgkey'
     state: present
 
-- name: Update APT cache
-  ansible.builtin.apt:
-    update_cache: yes
-
 - name: Install OpenTofu
   ansible.builtin.apt:
     name: opentofu
     state: latest
+    update_cache: true
