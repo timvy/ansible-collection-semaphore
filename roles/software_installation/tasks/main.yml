@@ -98,3 +98,7 @@
 - name: Start Tailscale proxy
   ansible.builtin.command:
     cmd: "tailscale serve --bg 3000"
+
+- name: Install OpenTofu from official APT repository on Debian
+  include_tasks: opentofu.yml
+  tags: opentofu
