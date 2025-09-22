@@ -15,3 +15,5 @@ semaphore_hash: "{{ lookup('community.general.bitwarden', 'lxc-semaphore_hash', 
 semaphore_encr: "{{ lookup('community.general.bitwarden', 'lxc-semaphore_encryption', field='password')|join() }}"
 semaphore_key: "{{ lookup('community.general.bitwarden', 'lxc-semaphore_key', field='password')|join() }}"
 semaphore_admin: "{{ lookup('community.general.bitwarden', 'lxc-semaphore_admin', field='password')|join() }}"
+semaphore_tg_bot_token: "{{ lookup('community.general.bitwarden', 'semaphore_tg_bot_token', field='password')|join() }}"
+semaphore_tg_chat_id: "{{ lookup('community.general.bitwarden', 'semaphore_tg_chat_id', field='password')|join() }}"

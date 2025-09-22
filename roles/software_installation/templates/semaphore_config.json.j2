@@ -1,9 +1,12 @@
 {
-  "bolt": {
-    "host": "{{ semaphore_user_home }}/database.boltdb"
+  "sqlite": {
+    "host": "{{ semaphore_user_home }}/database.sqlite"
   },
-  "dialect": "bolt",
+  "dialect": "sqlite",
   "cookie_hash": "{{ semaphore_hash }}",
   "cookie_encryption": "{{ semaphore_encr }}",
-  "access_key_encryption": "{{ semaphore_key }}"
+  "access_key_encryption": "{{ semaphore_key }}",
+  "telegram_alert": true,
+  "telegram_token": "{{ semaphore_tg_bot_token }}",
+  "telegram_chat": "{{ semaphore_tg_chat_id }}"
 }
