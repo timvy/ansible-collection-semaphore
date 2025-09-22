@@ -1,16 +1,29 @@
 ---
-- name: Add OpenTofu GPG key
-  ansible.builtin.apt_key:
-    url: https://packages.opentofu.org/opentofu/tofu/gpgkey
-    state: present
+- name: Check if OpenTofu is already in facts
+  ansible.builtin.set_fact:
+    opentofu_installed: "{{ 'tofu' in ansible_facts.packages }}"
 
-- name: Add OpenTofu APT repository
-  ansible.builtin.apt_repository:
-    repo: deb https://packages.opentofu.org/opentofu/tofu/any/ any main
-    state: present
+- name: Install opentofu
+  block:
+    - name: Install opentofu
+      ansible.builtin.apt:
+        name: tofu
+        state: latest
+        update_cache: true
 
-- name: Install OpenTofu
-  ansible.builtin.apt:
-    name: tofu
-    state: latest
-    update_cache: true
+    - name: Add OpenTofu GPG key
+      ansible.builtin.apt_key:
+        url: https://packages.opentofu.org/opentofu/tofu/gpgkey
+        state: present
+
+    - name: Add OpenTofu APT repository
+      ansible.builtin.apt_repository:
+        repo: deb https://packages.opentofu.org/opentofu/tofu/any/ any main
+        state: present
+
+    - name: Install OpenTofu
+      ansible.builtin.apt:
+        name: tofu
+        state: latest
+        update_cache: true
+  when: not opentofu_installed

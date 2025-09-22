@@ -1,9 +1,13 @@
 ---
+- name: Get all packages facts
+  ansible.builtin.package_facts:
+    manager: auto
+    
 - name: Update all OS packages to latest
   ansible.builtin.apt:
     upgrade: dist
     update_cache: true
-    
+
 - name: Install required packages
   ansible.builtin.apt:
     name: "{{ semaphore_package_requirements }}"
