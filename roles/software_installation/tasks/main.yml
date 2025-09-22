@@ -1,4 +1,9 @@
 ---
+- name: Update all OS packages to latest
+  ansible.builtin.apt:
+    upgrade: dist
+    update_cache: true
+    
 - name: Install required packages
   ansible.builtin.apt:
     name: "{{ semaphore_package_requirements }}"
