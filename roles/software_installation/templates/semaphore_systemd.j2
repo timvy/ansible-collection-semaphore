@@ -5,6 +5,8 @@ Wants=network-online.target
 After=network-online.target
 
 [Service]
+Environment="LC_ALL=C.UTF-8"
+Environment="LANG=C.UTF-8"
 User={{ semaphore_user }}
 Group={{ semaphore_user }}
 # to auto-upgrade ansible collections and roles at service startup
