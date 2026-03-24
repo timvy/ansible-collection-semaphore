@@ -8,5 +8,16 @@
   "access_key_encryption": "{{ semaphore_key }}",
   "telegram_alert": true,
   "telegram_token": "{{ semaphore_tg_bot_token }}",
-  "telegram_chat": "{{ semaphore_tg_chat_id }}"
+  "telegram_chat": "{{ semaphore_tg_chat_id }}",
+  "oidc_providers": {
+    "tailscale": {
+      "display_name": "Sign in with Tailscale",
+      "color": "orange",
+      "icon": "login",
+      "provider_url": "{{ oidc_tailscale_provider_url }}",
+      "client_id": "{{ oidc_tailscale_client_id }}",
+      "client_secret": "{{ oidc_tailscale_client_secret }}",
+      "redirect_url": "{{ oidc_tailscale_redirect_url }}"
+    }
+  }  
 }
