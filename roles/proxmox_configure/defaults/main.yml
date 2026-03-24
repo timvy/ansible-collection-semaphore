@@ -3,4 +3,4 @@ ansible_group: ansible
 ansible_home: /home/ansible
 ansible_shell: /bin/bash
 ansible_pct_user: ansible
-ansible_user_public_key: "{{ lookup('community.general.bitwarden', 'semaphore_homelab', field='sshKey').0.publicKey }}"
+ansible_user_public_key: "{{ lookup('community.general.bitwarden', 'semaphore_ssh_key', field='pub') | join()  }}"

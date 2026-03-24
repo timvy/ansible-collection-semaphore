@@ -1,0 +1,15 @@
+---
+semaphore:
+  hosts:
+    lxc-semaphore:
+      ansible_host: "lxc-semaphore.{{ domain_tailscale }}"
+      ansible_user: root
+
+proxmox:
+  hosts:
+    pve-hpe:
+      ansible_host: "pve-hpe.{{ domain_tailscale }}"
+      ansible_user: root
+    pve-odr-01:
+      ansible_host: "pve-odr-01.{{ domain_tailscale }}"
+      ansible_user: root

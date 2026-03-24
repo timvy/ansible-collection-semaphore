@@ -1,0 +1,2 @@
+---
+domain_tailscale: "{{ lookup('community.general.bitwarden', 'domains', field='tailscale') | join() }}"
